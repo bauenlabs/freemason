@@ -1,5 +1,5 @@
 """
-This File contains the main entry-point for the socket.io flask app that power
+This File contains the main entry-point for the socket.io flask app that powers
 notifications and pub/sub channels
 """
 
