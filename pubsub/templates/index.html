@@ -22,8 +22,9 @@
                 console.log('connected')
             });
             socket.on('deployment_event', function(msg) {
-              document.getElementById("progress-bar").style.width = msg.percent
-              console.log(msg.percent)
+              document.getElementById("progress-bar").style.width = msg.progress_percent
+              console.log(msg.data)
+              console.log(msg.progress_percent)
             });
       });
 
