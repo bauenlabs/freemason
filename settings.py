@@ -42,7 +42,7 @@ DeploymentSchema = {
     'branch': {
       'type': 'string'
     },
-    'app': {
+    'app_name': {
       'type': 'string'
     }
 }

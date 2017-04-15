@@ -4,7 +4,7 @@ of the eve.py app that power CRUD operations
 """
 
 from eve import Eve
-from tasks import deployments
+from tasks import Tasks
 
 
 def deployment_insert_callback(documents):
@@ -16,14 +16,11 @@ def deployment_insert_callback(documents):
     "repository": documents[0]['repository'],
     "path": documents[0]['path'],
     "branch": documents[0]['branch'],
-    "name": documents[0]['app'],
+    "app_name": documents[0]['app_name'],
   }
-  
-  # Instantiate instance of deployment class
-  deployment = deployments.Deployment(**kwargs)
-  
+   
   # Register deployment task
-  deploymentResult = deployment.apply_async()
+  deploymentResult = Tasks.deploy.delay(**kwargs)
 
   # Update document with deployment ids
   documents[0]['_id'] = deploymentResult.id
