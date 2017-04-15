@@ -1,6 +1,6 @@
 """
-This File contains the basic configuration and funtionality
-of the eve.py app that power CRUD operations
+This File contains the basic configuration and funtionality 
+of the eve.py app that powers CRUD operations
 """
 
 from eve import Eve
