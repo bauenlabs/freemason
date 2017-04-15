@@ -1,16 +1,25 @@
 from celery import Celery, states, Task, current_task
 from flask_socketio import SocketIO
-#define celery app
+from git import Repo, Git
+
+# Instantiate Celery app
 app = Celery('tasks', broker='mongodb://localhost:27017/app', backend="mongodb://localhost:27017/app")
 
 @app.task
-def deployment():
-    import time
-    for x in xrange(10):
-      time.sleep(2)
-      currentID = current_task.request.id
-      socketio = SocketIO(message_queue="redis://")
-      percent = (x + 1) * 10
-      string = "{0}%".format(percent)
-      socketio.emit('deployment_event', {"data": currentID, "room": currentID, "percent": string }, room=currentID, namespace='/deployments') 
-    return "progessiveTaskExample is done"
+def deploy(**kwargs):
+  """
+  Fuction executed by celery for a deployment
+  """
+  
+  # Import deployments module
+  from lib import deployments
+
+  # Append current task ID to kwargs to be passed deployment object
+  kwargs['task_id'] = current_task.request.id
+
+  # Instantiate Deployment Object
+  d = deployments.Deployment(**kwargs)
+
+  # Execute Deployment.deploy() and return results
+  return d.deploy()
+

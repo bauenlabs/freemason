@@ -1,5 +1,5 @@
 """
-This File contains the basic configuration and funtionality 
+This File contains the basic configuration and funtionality
 of the eve.py app that powers CRUD operations
 """
 
@@ -11,21 +11,27 @@ def deployment_insert_callback(documents):
   """
   Function to queue deployments when they are created in the API
   """
-  # deployment arguments
-  args = documents[0]['args']
-
-  # Execute the deployment with the arguments
-  deploymentResult = Tasks.deployment.apply_async(*args)
+  # Pull arguemnts for deployment task from the document
+  kwargs = {
+    "repository": documents[0]['repository'],
+    "path": documents[0]['path'],
+    "branch": documents[0]['branch'],
+    "app_name": documents[0]['app_name'],
+  }
+   
+  # Register deployment task
+  deploymentResult = Tasks.deploy.delay(**kwargs)
 
   # Update document with deployment ids
   documents[0]['_id'] = deploymentResult.id
 
 def deployment_fetch_callback(response):
   """
-  CallBack function join in data from celery when its looked up
+  CallBback function to join in data from celery when a deployment is 
+  looked up
   """
   # Instantiate Task object from celery
-  deployment = Tasks.app.AsyncResult(response['_id'])
+  deployment = deployments.app.AsyncResult(response['_id'])
 
   # Lookup Deployments current status in celery
   response['status'] = deployment.status

@@ -33,11 +33,17 @@ DeploymentSchema = {
         'maxlength': 100,
         'required': True
     },
-    'args': {
-        'type': 'list'
+    'path': {
+      'type': 'string'
     },
     'status': {
-        'type': 'string'
+      'type': 'string'
+    },
+    'branch': {
+      'type': 'string'
+    },
+    'app_name': {
+      'type': 'string'
     }
 }
 
