@@ -1,5 +1,9 @@
 """
+<<<<<<< HEAD
 This File contains the basic configuration and funtionality 
+=======
+This File contains the basic configuration and funtionality
+>>>>>>> e6bba8ebf5ed1c2dd0b9415efeb01e730f212fb8
 of the eve.py app that powers CRUD operations
 """
 
