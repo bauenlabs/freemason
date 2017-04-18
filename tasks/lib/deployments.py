@@ -1,6 +1,6 @@
 from git import Git, Repo
 from flask_socketio import SocketIO
-
+import time
 class Deployment(object):
   """
   This Class represents a Deployment object, and contains the attributes and 
@@ -54,7 +54,6 @@ class Deployment(object):
       )
       # Return Failure message and exception
       return "failed to instantiate repo"
-
     try: 
       # Ensure that the cloned repo is up-to-date
       r.remotes.origin.pull()
@@ -89,6 +88,12 @@ class Deployment(object):
       # Return Failure message and exception
       return "failed to checkout {0}".format(self.branch)
 
+  def emitEvent(self, data, errors, meta):
+    meta['timestampe'] = time.time()
+    self.socketio.emit('deployment_event', 
+        {"data": data, "errors": errors, "meta": meta},
+         room=self.task_id, namespace='/deployments'
+    )
 
   def buildImage(self):
     """
@@ -100,10 +105,15 @@ class Deployment(object):
 
     # Build an image with the correct tag
     client.images.build(path=self.path, tag=self.tag)
+
   def deploy(self):
     """
     This function is what is envoked by celery itself when a deployment task is
     executed.
     """
-    test = self.cloneRepo() 
-    return test
+    #test = self.cloneRepo()
+    data = {"msg": "this is a deployment event"}
+    errors = "no error"
+    meta = {"task_id": "someid"}
+    self.emitEvent(data, errors, meta)
+    return "lol"
