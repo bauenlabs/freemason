@@ -31,7 +31,7 @@ def deployment_fetch_callback(response):
   looked up
   """
   # Instantiate Task object from celery
-  deployment = deployments.app.AsyncResult(response['_id'])
+  deployment = Tasks.app.AsyncResult(response['_id'])
 
   # Lookup Deployments current status in celery
   response['status'] = deployment.status
